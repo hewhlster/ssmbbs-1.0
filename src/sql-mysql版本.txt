@@ -1,0 +1,140 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : localhost
+Source Server Version : 50087
+Source Host           : localhost:3306
+Source Database       : bbs
+
+Target Server Type    : MYSQL
+Target Server Version : 50087
+File Encoding         : 65001
+
+Date: 2017-11-23 15:41:33
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for tbl_board
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_board`;
+CREATE TABLE `tbl_board` (
+  `bid` varchar(32) NOT NULL,
+  `bname` varchar(60) NOT NULL,
+  `bparent` varchar(32) default NULL,
+  `bimg` varchar(100) default NULL,
+  `bmemo` varchar(100) default NULL,
+  PRIMARY KEY  (`bid`),
+  UNIQUE KEY `uk_bname` (`bname`),
+  KEY `bparent` (`bparent`),
+  CONSTRAINT `tbl_board_ibfk_1` FOREIGN KEY (`bparent`) REFERENCES `tbl_board` (`bid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tbl_board
+-- ----------------------------
+INSERT INTO `tbl_board` VALUES ('1000', '互动常州', null, '', '主版');
+INSERT INTO `tbl_board` VALUES ('1001', '龙城茶座', '1000', '1.jpg', '');
+INSERT INTO `tbl_board` VALUES ('1002', '谈天说地', '1000', '2.jpg', '');
+INSERT INTO `tbl_board` VALUES ('1003', '情感天空', '1000', '3.jpg', '');
+INSERT INTO `tbl_board` VALUES ('1004', '生活娱乐', null, '4.jpg', '主版');
+INSERT INTO `tbl_board` VALUES ('1005', '上班这点事', '1004', '5.jpg', '');
+INSERT INTO `tbl_board` VALUES ('1006', '教育论坛', '1004', '6.jpg', '');
+
+-- ----------------------------
+-- Table structure for tbl_reply
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_reply`;
+CREATE TABLE `tbl_reply` (
+  `rid` varchar(32) NOT NULL,
+  `rname` varchar(32) default NULL,
+  `rcontent` varchar(1000) NOT NULL,
+  `rreaded` int(11) default '0',
+  `rgooded` int(11) default '0',
+  `tid` varchar(32) NOT NULL,
+  `uid` varchar(32) NOT NULL,
+  `tpublishdate` datetime default NULL,
+  `tmodfitydate` datetime default NULL,
+  PRIMARY KEY  (`rid`),
+  KEY `tid` (`tid`),
+  KEY `uid` (`uid`),
+  CONSTRAINT `tbl_reply_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tbl_topic` (`tid`),
+  CONSTRAINT `tbl_reply_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `tbl_user` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tbl_reply
+-- ----------------------------
+INSERT INTO `tbl_reply` VALUES ('760a9342d02111e793822a2e68814f0a', null, 'dfsafsafsdafd', null, null, '70d6a286d02111e793822a2e68814f0a', '70d74c96d01b11e793822a2e68814f0a', '2017-11-23 15:39:39', '2017-11-23 15:39:39');
+INSERT INTO `tbl_reply` VALUES ('7f277794d02111e793822a2e68814f0a', null, '中华人民共和国', null, null, '70d6a286d02111e793822a2e68814f0a', '70d74c96d01b11e793822a2e68814f0a', '2017-11-23 15:39:54', '2017-11-23 15:39:54');
+
+-- ----------------------------
+-- Table structure for tbl_topic
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_topic`;
+CREATE TABLE `tbl_topic` (
+  `tid` varchar(32) NOT NULL,
+  `tname` varchar(32) NOT NULL,
+  `tcontent` varchar(1000) NOT NULL,
+  `treaded` int(11) default '0',
+  `tgooded` int(11) default '0',
+  `bid` varchar(32) NOT NULL,
+  `uid` varchar(32) NOT NULL,
+  `tpublishdate` datetime default NULL,
+  `tmodfitydate` datetime default NULL,
+  PRIMARY KEY  (`tid`),
+  KEY `bid` (`bid`),
+  KEY `uid` (`uid`),
+  CONSTRAINT `tbl_topic_ibfk_1` FOREIGN KEY (`bid`) REFERENCES `tbl_board` (`bid`),
+  CONSTRAINT `tbl_topic_ibfk_2` FOREIGN KEY (`uid`) REFERENCES `tbl_user` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tbl_topic
+-- ----------------------------
+INSERT INTO `tbl_topic` VALUES ('70d6a286d02111e793822a2e68814f0a', 'vczx', 'vczvczvcvcxzvcxzvczx', '3', '0', '1006', '70d74c96d01b11e793822a2e68814f0a', '2017-11-23 15:39:30', '2017-11-23 15:39:30');
+INSERT INTO `tbl_topic` VALUES ('8f4925a7d02011e793822a2e68814f0a', 'dfsa', 'fdsa', '0', '0', '1001', '70d74c96d01b11e793822a2e68814f0a', '2017-11-23 15:33:11', '2017-11-23 15:33:11');
+
+-- ----------------------------
+-- Table structure for tbl_user
+-- ----------------------------
+DROP TABLE IF EXISTS `tbl_user`;
+CREATE TABLE `tbl_user` (
+  `uid` varchar(32) NOT NULL,
+  `uname` varchar(32) NOT NULL,
+  `upass` varchar(32) NOT NULL,
+  `ugender` varchar(32) default NULL,
+  `ubirthday` date default NULL,
+  `uemail` varchar(32) default NULL,
+  `uhead` varchar(50) default NULL,
+  `umemo` varchar(32) default NULL,
+  `urole` int(11) default '0',
+  `uregtime` datetime default NULL,
+  `ulastacctime` date default NULL,
+  `utype` int(1) default '0' COMMENT '用户类型',
+  PRIMARY KEY  (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of tbl_user
+-- ----------------------------
+INSERT INTO `tbl_user` VALUES ('0342794fd01811e793822a2e68814f0a', '889999', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', '0342794fd01811e793822a2e68814f0a.png', '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('1c8d15afc12711e7ba2df1f3eece40d2', 'fjh', 'e10adc3949ba59abbe56e057f20f883e', null, null, 'kk@kk.com', null, 'fdsafafas', '0', '2017-11-04 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('1f767aacd01611e793822a2e68814f0a', 'zzz', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('2c4da60fd01411e793822a2e68814f0a', '7878', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('2cbac25688a711e78e97c85b766dcf6d', 'admin', 'd0970714757783e6cf17b26fb8e2298f', null, null, 'kk@kk.com', null, 'fdasfdsa', '0', '2017-11-04 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('31302b6bd01011e793822a2e68814f0a', '112233', 'e10adc3949ba59abbe56e057f20f883e', null, null, 'u2222@22.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('53fa44ddd01611e793822a2e68814f0a', '8989', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('6052c1e7c16f11e7a0605dcaddf32af8', 'kkk', '6512bd43d9caa6e02c990b0a82652dca', null, null, 'kk@ll.com', null, '简介简介简介', '0', '2017-11-04 00:00:00', null, '1');
+INSERT INTO `tbl_user` VALUES ('64bf7d69d01811e793822a2e68814f0a', 'vfvf', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', '64bf7d69d01811e793822a2e68814f0a.png', '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('65203f82d01311e793822a2e68814f0a', '666666', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('70040202c12711e7ba2df1f3eece40d2', 'rose', 'e10adc3949ba59abbe56e057f20f883e', null, null, 'kk@kk.com', null, 'fdsafafas', '0', '2017-11-04 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('70d74c96d01b11e793822a2e68814f0a', 'jack', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', '70d74c96d01b11e793822a2e68814f0a.png', '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('89326867d01811e793822a2e68814f0a', '456789', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', '89326867d01811e793822a2e68814f0a.png', '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('99f96073d01511e793822a2e68814f0a', '9999', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('c590281dd01711e793822a2e68814f0a', '3434', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('ce62d5fad01511e793822a2e68814f0a', 'aaaa', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('e0322b9dd01311e793822a2e68814f0a', '4444', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('e8706661d01611e793822a2e68814f0a', 'xxxxx', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
+INSERT INTO `tbl_user` VALUES ('ec44a4ecd01711e793822a2e68814f0a', '3322', '202cb962ac59075b964b07152d234b70', null, null, '55@aa.com', null, '简介简介简介', '0', '2017-11-23 00:00:00', null, '0');
